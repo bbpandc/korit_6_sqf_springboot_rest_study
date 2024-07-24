@@ -1,8 +1,11 @@
 package com.study.rest.controller;
 
+import com.study.rest.dto.ProductDto;
 import com.study.rest.dto.ReqProductDto;
 import com.study.rest.dto.ReqStudentDto;
+import com.study.rest.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j // log 사용
 @RestController  // 데이터만 요청하고 데이터만 받음 view응답이 없다(오로지 데이터 응답만 있음), @ResponseBody가 자동으로 적용
 public class BasicController {
+
+    @Autowired
+    private ProductService productService;
 
     /**
      * REST API
@@ -51,10 +57,21 @@ public class BasicController {
     }
 
     @CrossOrigin
-    @PostMapping("/basic/product")
-    public ResponseEntity<?> registerProduct(@RequestBody ReqProductDto reqProductDto) {
-        log.info("{}", reqProductDto);
-        return ResponseEntity.ok().body(null);
+    @PostMapping("/api/v1/product")
+    public ResponseEntity<?> registerProduct(@RequestBody ProductDto.Register register) {
+        return ResponseEntity.ok().body(productService.registerProduct(register));
+    }
+
+    @CrossOrigin
+    @GetMapping("/api/v1/sizes")
+    public ResponseEntity<?> sizeListApi() {
+        return ResponseEntity.ok().body(productService.getSizeListAll());
+    }
+
+    @CrossOrigin
+    @GetMapping("/api/v1/colors")
+    public ResponseEntity<?> colorListApi() {
+        return ResponseEntity.ok().body(productService.getColorListAll());
     }
 }
 
